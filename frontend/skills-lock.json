@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "skills": {
+    "APEX Methodology": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/apex/SKILL.md",
+      "computedHash": "8e2ef581ac6706be632f1509bd11b0e133a8c3c9ddc0b038d4691cc089f98a41"
+    },
+    "agent-creator": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/agent-creator/SKILL.md",
+      "computedHash": "45c2905f75fde4f7cafacba2b1b0bdf73d78b8481c96920bfa0106fcdc563599"
+    },
+    "brainstorming": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/brainstorming/SKILL.md",
+      "computedHash": "ec6b503a597f1de7d7d10bdf6aeaa0c3254c4fae3cb5ec02f926080f154685dd"
+    },
+    "code-quality": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/code-quality/SKILL.md",
+      "computedHash": "c5c6c35ddce4efd5c6397c689ffe134ec4a75aac2ad495f28016ccc8afc7ee7a"
+    },
+    "exploration": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/exploration/SKILL.md",
+      "computedHash": "c6f00cc8cb4de4195da23b8bab3791a36b839aa1abb09a20881a6ddf46959741"
+    },
+    "jwt-security": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "jwt-security/SKILL.md",
+      "computedHash": "88b3f7d03223cf20e24598d231e667b13ba6bf9040fd490feafcd226356a9db1"
+    },
+    "nextjs-react-typescript": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "nextjs-react-typescript/SKILL.md",
+      "computedHash": "52067402daf8388ba7970478e0ba1f350f1868a65a62ae2bf6f4dc1ac3cf3e88"
+    },
+    "nextjs-server-components": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/nextjs-expert/skills/nextjs-server-components/SKILL.md",
+      "computedHash": "30543b185804746017942bc15882fc65277474c6d39ee3a0d949736b880a5956"
+    },
+    "optimized-nextjs-typescript": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "optimized-nextjs-typescript/SKILL.md",
+      "computedHash": "d94268ecf8422b888b64b8db78894aad3bda5a3c750f06d540a5398d7b47863d"
+    },
+    "performance-optimization": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "performance-optimization/SKILL.md",
+      "computedHash": "c312a668af8cb566f5cef43dcf70607df2cb9f49cf008d8e31a0c54b1bde43c8"
+    },
+    "postcss-best-practices": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "postcss-best-practices/SKILL.md",
+      "computedHash": "6184fb493600bed0980b25651b64935e5c5a48188f487b23c4f6a7b636f3919a"
+    },
+    "postgresql-best-practices": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "postgresql-best-practices/SKILL.md",
+      "computedHash": "d32a9114bc974c965308108be7a41d9da4cddd037d5941b96611cce63064f7ea"
+    },
+    "prisma-development": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "prisma-development/SKILL.md",
+      "computedHash": "bc18e17894e3349e0cc8925465000e08d10ac4a9d8048be904ebd66f1533c6f1"
+    },
+    "react-effects-audit": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/react-effects-audit/SKILL.md",
+      "computedHash": "8ed77cc1a1b184f5dca2fec3011845a29101a752a816ff948e1682c7a521b92d"
+    },
+    "research": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/research/SKILL.md",
+      "computedHash": "ac791a4ad2eb90777e3fe8793bfdf722f7ff08e6f80f0393036d2a978c1c5050"
+    },
+    "shadcn-components": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/shadcn-expert/skills/shadcn-components/SKILL.md",
+      "computedHash": "7b675d70cc9bf5b123de587ff94d5341289daaca51f0afc43e4c52c67fd4b5fe"
+    },
+    "skill-creator": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/skill-creator/SKILL.md",
+      "computedHash": "eb859a6531f76344f1e58ef1789d913e0a5967444a12f9ddfff549c9624ffded"
+    },
+    "sniper-check": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/sniper-check/SKILL.md",
+      "computedHash": "f629dbb6d2842838f47bb6e76aadaf95073bcc4add350cfa8197cb297dc6c18a"
+    },
+    "tailwindcss-accessibility": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/tailwindcss/skills/tailwindcss-accessibility/SKILL.md",
+      "computedHash": "cdd132495a6621157fdf71fdd7fabb7b15bedd657e83bdb1e73340ee43b34455"
+    },
+    "tailwindcss-interactivity": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/tailwindcss/skills/tailwindcss-interactivity/SKILL.md",
+      "computedHash": "7df27960899856431c7baf0401d665ec084004d03c8c51b08fd9849a52c6d61b"
+    },
+    "tailwindcss-responsive": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/tailwindcss/skills/tailwindcss-responsive/SKILL.md",
+      "computedHash": "5dc170b90dae852cbb735d8c2a6f15f154d8ce94c79e4a3d3316b4482075e828"
+    },
+    "tailwindcss-sizing": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/tailwindcss/skills/tailwindcss-sizing/SKILL.md",
+      "computedHash": "87ada5d3fa76faf8333fbe69ce6faad423d04c279f853a4e6e94d2c10f351388"
+    },
+    "tailwindcss-v4": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/tailwindcss/skills/tailwindcss-v4/SKILL.md",
+      "computedHash": "5bcacd86b67cbdb6958473476b4ccab401c8fec04da977bd0f04578fe0982303"
+    },
+    "tdd": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/tdd/SKILL.md",
+      "computedHash": "d6e138316d5ed541a4dfdb9cae0e5d2ab71d3df3abf75263e2b856d69b145259"
+    },
+    "ux-design": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "ux-design/SKILL.md",
+      "computedHash": "767fc1c09bca0fdeed1c096846b732cd5b70643001aef17d221a87e0ab146657"
+    },
+    "vercel-development": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "vercel-development/SKILL.md",
+      "computedHash": "89b2a41c0b840b925096257dab219203777e2a83bd10ea135aebc5108b875c00"
+    },
+    "verification": {
+      "source": "fusengine/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ai-pilot/skills/verification/SKILL.md",
+      "computedHash": "9c1619f145129afbb8ed7a0f3e5855cee906aae4f3ec1b00e43277196d4873f7"
+    }
+  }
+}
