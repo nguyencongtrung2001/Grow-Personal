@@ -42,7 +42,7 @@ export default function BigCalendar() {
   ];
 
   return (
-    <Card className="rounded-xl border-slate-200 shadow-sm p-6 h-full flex flex-col bg-white">
+    <Card className="rounded-xl border-slate-200 shadow-sm p-5 flex flex-col bg-white h-[620px]">
       <CardHeader className="p-0 flex flex-row items-center justify-between mb-6 space-y-0">
         <CardTitle className="text-xl font-bold text-slate-900">Tháng 10, 2023</CardTitle>
         <div className="flex gap-2">
@@ -67,7 +67,7 @@ export default function BigCalendar() {
             return (
               <div 
                 key={idx} 
-                className={`bg-white min-h-[100px] p-2 border-b border-r border-slate-100 transition-all ${
+                className={`bg-white min-h-[80px] p-2 border-b border-r border-slate-100 transition-all ${
                   !cell.isCurrentMonth ? "opacity-40" : ""
                 } ${isToday ? "border-emerald-500 border-2 relative z-10" : ""}`}
               >

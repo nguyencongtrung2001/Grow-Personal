@@ -36,11 +36,11 @@ export default function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar className="border-r border-slate-200 bg-white shadow-sm">
-      <SidebarHeader className="px-6 py-8 pb-4">
+    <Sidebar collapsible="icon" className="border-r border-slate-200 bg-white shadow-sm">
+      <SidebarHeader className="px-6 py-8 pb-4 group-data-[collapsible=icon]:px-4 group-data-[collapsible=icon]:py-4">
         <div className="flex items-center gap-2">
-          <span className="w-3 h-6 bg-linear-to-b from-orange-600 to-amber-500 rounded-full"></span>
-          <div>
+          <span className="w-3 h-6 bg-linear-to-b from-orange-600 to-amber-500 rounded-full shrink-0"></span>
+          <div className="group-data-[collapsible=icon]:hidden">
             <h2 className="text-lg font-bold text-slate-900 tracking-tight">Command Center</h2>
             <p className="text-[11px] font-semibold text-slate-500">Productivity OS</p>
           </div>
@@ -59,6 +59,7 @@ export default function AppSidebar() {
                     <SidebarMenuButton
                       asChild
                       isActive={isActive}
+                      tooltip={item.label}
                       className={`h-auto px-4 py-3 rounded-xl transition-all ${
                         isActive
                           ? "bg-slate-900 text-white font-bold shadow-md shadow-slate-900/10 hover:bg-slate-800 hover:text-white"
@@ -66,8 +67,8 @@ export default function AppSidebar() {
                       }`}
                     >
                       <Link href={item.href} className="flex items-center gap-3 w-full">
-                        <Icon className="w-4 h-4" />
-                        <span className="text-sm">{item.label}</span>
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <span className="text-sm group-data-[collapsible=icon]:hidden">{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -78,13 +79,13 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 mt-auto">
-        <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center gap-3">
-          <Avatar className="w-8 h-8">
+      <SidebarFooter className="p-4 mt-auto group-data-[collapsible=icon]:p-2">
+        <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center gap-3 group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:justify-center">
+          <Avatar className="w-8 h-8 shrink-0">
             <AvatarImage src="https://lh3.googleusercontent.com/...your-avatar-id" alt="Profile" />
             <AvatarFallback>TN</AvatarFallback>
           </Avatar>
-          <div className="truncate">
+          <div className="truncate group-data-[collapsible=icon]:hidden">
             <p className="text-xs font-bold text-slate-900">Trung Nguyen</p>
             <p className="text-[10px] text-slate-500">Senior Workspace</p>
           </div>

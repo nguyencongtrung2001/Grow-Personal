@@ -25,9 +25,6 @@ export default function TodayAgenda() {
             <div className="flex-1">
               <p className="text-sm font-semibold text-slate-800">Hoàn thành báo cáo tài chính Q3</p>
               <div className="flex gap-2 mt-2">
-                <Button variant="outline" className="h-6 text-[10px] bg-white text-slate-500 px-2 border-slate-200 hover:text-slate-800 rounded flex items-center gap-1 font-sans">
-                  <GitBranch className="w-3 h-3" /> Sub-tasks (0/3)
-                </Button>
                 <Badge className="bg-rose-50 text-rose-700 font-bold border border-rose-200 hover:bg-rose-50 shadow-none text-[10px] px-2 py-0">
                   Tài Chính
                 </Badge>
