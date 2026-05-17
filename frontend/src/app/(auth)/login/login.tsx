@@ -13,7 +13,7 @@ export default function LoginPage() {
       {/* Header Section */}
       <header className="flex justify-center items-center w-full pt-12 pb-4 relative z-10">
         <div className="flex items-center gap-2.5">
-          <span className="w-3 h-6 bg-gradient-to-b from-[#FF4500] via-[#EAB308] to-[#0284C7] rounded-full shadow-sm" />
+          <span className="w-3 h-6 bg-linear-to-b from-[#FF4500] via-[#EAB308] to-[#0284C7] rounded-full shadow-sm" />
           <h1 className="text-xl font-black text-[#0F172A] tracking-tight font-sans">
             Growth Personal
           </h1>
@@ -21,7 +21,7 @@ export default function LoginPage() {
       </header>
 
       {/* Main Content Canvas */}
-      <main className="flex-grow flex items-center justify-center px-5 relative z-10 py-6">
+      <main className="grow flex items-center justify-center px-5 relative z-10 py-6">
         <AuthCard />
       </main>
 

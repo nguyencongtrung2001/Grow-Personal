@@ -1,4 +1,5 @@
 import React from "react";
+import { CalendarDays } from "lucide-react";
 
 export default function GreetingBanner() {
   return (
@@ -9,7 +10,7 @@ export default function GreetingBanner() {
         <p className="text-xs text-text-muted mt-1">Hệ thống đã chuẩn bị đầy đủ lộ trình hũ tài chính, thẻ từ vựng và ma trận công việc cho hôm nay.</p>
       </div>
       <div className="bg-slate-900 text-white text-xs font-mono font-bold px-4 py-2 rounded-xl flex items-center gap-2 z-10">
-        <span className="material-symbols-outlined text-sm">calendar_today</span> May 16, 2026
+        <CalendarDays className="w-4 h-4" /> May 16, 2026
       </div>
     </section>
   );

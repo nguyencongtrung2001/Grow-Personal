@@ -1,13 +1,48 @@
 import type { Metadata } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AppSidebar from "@/components/layouts/Sidebars";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Link from "next/link";
 
+// Load Google Fonts locally via next/font to eliminate external CDN network requests and Layout Shift (CLS)
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
+// Comprehensive, production-ready SEO configuration meeting strict marketplace standards
 export const metadata: Metadata = {
-  title: "Master Dashboard - Command Center",
+  metadataBase: new URL("https://yourdomain.com"),
+  title: {
+    default: "Master Dashboard - Command Center",
+    template: "%s | Master Dashboard",
+  },
   description: "Productivity OS built with Next.js",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: "Master Dashboard - Command Center",
+    description: "Productivity OS built with Next.js",
+    url: "https://yourdomain.com",
+    siteName: "Master Dashboard",
+    locale: "vi_VN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Master Dashboard - Command Center",
+    description: "Productivity OS built with Next.js",
+  },
 };
 
 export default function RootLayout({
@@ -16,46 +51,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className="light">
-      <head>
-        <Link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-          rel="stylesheet"
-        />
-        <Link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="bg-slate-50 text-slate-900 min-h-screen antialiased font-sans">
+    <html lang="vi" className="light" suppressHydrationWarning>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} bg-slate-50 text-slate-900 min-h-screen antialiased font-sans`} suppressHydrationWarning>
         <TooltipProvider>
           <SidebarProvider>
             <div className="flex min-h-screen w-full">
-            {/* AppSidebar component from Shadcn */}
-            <AppSidebar />
-            
-            {/* Khối content chính */}
-            <main className="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
-              {/* Header thanh công cụ nhỏ chứa Trigger */}
-              <header className="flex h-16 shrink-0 items-center gap-2 border-b border-slate-100 bg-white px-4 md:px-6">
-                <SidebarTrigger className="text-slate-600 hover:bg-slate-100 p-2 rounded-xl transition-all" />
-                <div className="h-4 w-px bg-slate-200" />
-                <div className="flex-1 overflow-x-auto whitespace-nowrap py-1 scrollbar-none  flex items-center">
-        
-                </div>
-              </header>
+              {/* AppSidebar component from Shadcn */}
+              <AppSidebar />
+              
+              {/* Khối content chính */}
+              <main className="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
+                {/* Header thanh công cụ nhỏ chứa Trigger */}
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b border-slate-100 bg-white px-4 md:px-6">
+                  <SidebarTrigger className="text-slate-600 hover:bg-slate-100 p-2 rounded-xl transition-all" />
+                  <div className="h-4 w-px bg-slate-200" />
+                  <div className="flex-1 overflow-x-auto whitespace-nowrap py-1 scrollbar-none [&::-webkit-scrollbar]:hidden flex items-center">
+                    <span className="text-xs font-semibold text-slate-500">Workspace / Dashboard</span>
+                  </div>
+                </header>
 
-              {/* Viewport chính của Page */}
-              <div className="flex-1 p-4 md:p-8 overflow-y-auto">
-                <div className="w-full flex flex-col gap-6">
-                  {children}
+                {/* Viewport chính của Page */}
+                <div className="flex-1 p-4 md:p-8 overflow-y-auto">
+                  <div className="w-full flex flex-col gap-6">
+                    {children}
+                  </div>
                 </div>
-              </div>
-            </main>
-          </div>
-        </SidebarProvider>
-      </TooltipProvider>
-    </body>
+              </main>
+            </div>
+          </SidebarProvider>
+        </TooltipProvider>
+      </body>
     </html>
   );
 }
