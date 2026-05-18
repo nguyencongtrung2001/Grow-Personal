@@ -1,53 +1,44 @@
 "use client";
-import React from "react";
-import FinancePots from "@/components/dashboard/FinancePots";
-import {  TrendingUp, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { Suspense } from "react";
+import FinanceLayout from "@/components/finance/FinanceLayout";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function FinanceLoadingFallback() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      {/* Header Skeleton */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-48 rounded-xl" />
+          <Skeleton className="h-4 w-72 rounded-lg" />
+        </div>
+        <Skeleton className="h-9 w-32 rounded-xl" />
+      </div>
+      
+      {/* Tabs Skeleton */}
+      <div className="bg-slate-200/50 h-11 w-80 rounded-xl p-1" />
+      
+      {/* Stats Cards Skeleton */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-2xl bg-white border border-slate-100 shadow-2xs" />
+        ))}
+      </div>
+
+      {/* Grid of Jars Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-[180px] rounded-2xl bg-white border border-slate-150 shadow-2xs" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function FinancePage() {
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Quản Lý Tài Chính</h1>
-            <p className="text-xs text-slate-500">Hệ thống hũ tài chính thông minh Timo Pots</p>
-          </div>
-        </div>
-        
-        <Button className="bg-slate-900 text-white font-bold text-xs h-9 rounded-xl flex items-center gap-1.5 hover:bg-slate-800">
-          <Plus className="w-4 h-4" /> Thêm giao dịch
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8">
-          <FinancePots />
-        </div>
-
-        <div className="lg:col-span-4 space-y-6">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-emerald-500" /> Báo cáo Thu/Chi
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-xs p-3 bg-slate-50 border border-slate-100 rounded-xl">
-                <span className="font-semibold text-slate-600">Tổng thu nhập</span>
-                <span className="font-bold text-emerald-600">+25,000,000 ₫</span>
-              </div>
-              <div className="flex justify-between items-center text-xs p-3 bg-slate-50 border border-slate-100 rounded-xl">
-                <span className="font-semibold text-slate-600">Tổng chi tiêu</span>
-                <span className="font-bold text-rose-600">-9,800,000 ₫</span>
-              </div>
-              <div className="flex justify-between items-center text-xs p-3 bg-slate-50 border border-slate-100 rounded-xl">
-                <span className="font-semibold text-slate-600">Tích lũy ròng</span>
-                <span className="font-bold text-slate-900">+15,200,000 ₫</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Suspense fallback={<FinanceLoadingFallback />}>
+      <FinanceLayout />
+    </Suspense>
   );
 }
