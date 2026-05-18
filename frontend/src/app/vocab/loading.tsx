@@ -36,8 +36,8 @@ export default function VocabLoading() {
       {/* Deck Grid — Card Grid */}
       <div className="space-y-4">
         <Skeleton className="h-5 w-40 rounded" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
               className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm space-y-4"

@@ -19,6 +19,18 @@
       "skillPath": "plugins/ai-pilot/skills/brainstorming/SKILL.md",
       "computedHash": "ec6b503a597f1de7d7d10bdf6aeaa0c3254c4fae3cb5ec02f926080f154685dd"
     },
+    "ckm:design-system": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/design-system/SKILL.md",
+      "computedHash": "0206bc1d866ba6a93c6683d28b801314979fd164939d53830a7592ce0fb7a8a2"
+    },
+    "ckm:ui-styling": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-styling/SKILL.md",
+      "computedHash": "b5f892864e479f969820c353f44faeedc61981bf2d7a854367069a80e0a264e1"
+    },
     "code-quality": {
       "source": "fusengine/agents",
       "sourceType": "github",
@@ -144,6 +156,12 @@
       "sourceType": "github",
       "skillPath": "plugins/ai-pilot/skills/tdd/SKILL.md",
       "computedHash": "d6e138316d5ed541a4dfdb9cae0e5d2ab71d3df3abf75263e2b856d69b145259"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "6337038fe1fe6bbe1b9f252ab678ee575859190bab6f0f246f4061824eb40875"
     },
     "ux-design": {
       "source": "Mindrally/skills",

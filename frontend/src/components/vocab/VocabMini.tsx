@@ -2,7 +2,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, FilePlus, Puzzle, Layers, HelpCircle, LayoutGrid, Keyboard } from "lucide-react";
+import { Puzzle, Layers, HelpCircle, LayoutGrid, Keyboard } from "lucide-react";
 
 const gameModes = [
   { title: "Lật Thẻ Trực Quan", desc: "Học thuộc từ mới nhanh", icon: Layers, color: "text-sky-600 bg-sky-100" },
@@ -13,26 +13,6 @@ const gameModes = [
 
 export default function VocabControlPanel() {
   return (
-    <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      {/* Khối quản lý tác vụ tạo nhanh */}
-      <Card className="rounded-2xl p-6 border-[#E2EDF5] bg-linear-to-br from-white to-sky-50/30 shadow-sm flex flex-col justify-center gap-4">
-        <div>
-          <h2 className="text-lg font-bold text-slate-900">Quản Lý Không Gian Học</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Xây dựng thư mục và hệ thống flashcard thông minh của bạn.</p>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <Button variant="outline" className="flex flex-col items-center justify-center gap-2 h-28 bg-white border-sky-200 text-sky-600 hover:bg-sky-50/50 hover:text-sky-700 rounded-xl font-bold text-xs transition-all active:scale-[0.98] group">
-            <FolderPlus className="w-7 h-7 text-sky-600 group-hover:scale-105 transition-transform" />
-            Tạo thư mục mới
-          </Button>
-          <Button className="bg-sky-600 hover:bg-sky-700 text-white flex flex-col items-center justify-center gap-2 h-28 rounded-xl font-bold text-xs transition-all active:scale-[0.98] group shadow-md shadow-sky-600/10">
-            <FilePlus className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
-            Tạo thẻ từ mới
-          </Button>
-        </div>
-      </Card>
-
-      {/* Khối Lựa chọn 4 phương thức Mini Game */}
       <Card className="rounded-2xl p-6 xl:col-span-2 border-[#E2EDF5] shadow-sm bg-white">
         <div className="mb-4">
           <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
@@ -60,6 +40,6 @@ export default function VocabControlPanel() {
           })}
         </div>
       </Card>
-    </section>
+  
   );
 }
