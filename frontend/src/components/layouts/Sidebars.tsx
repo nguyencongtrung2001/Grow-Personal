@@ -17,8 +17,6 @@ import {
 import { 
   LayoutDashboard, 
   BookOpen, 
-  CreditCard, 
-  CheckSquare, 
   Trophy, 
   StickyNote 
 } from "lucide-react";
@@ -26,8 +24,6 @@ import {
 const navItems = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard, hoverColor: "text-white", hoverBg: "bg-slate-900" },
   { label: "Learn Vocab", href: "/vocab", icon: BookOpen, hoverColor: "hover:text-sky-600", hoverBg: "hover:bg-sky-50" },
-  { label: "Finance", href: "/finance", icon: CreditCard, hoverColor: "hover:text-amber-600", hoverBg: "hover:bg-amber-50" },
-  { label: "Tasks", href: "/tasks", icon: CheckSquare, hoverColor: "hover:text-emerald-600", hoverBg: "hover:bg-emerald-50" },
   { label: "Challenges", href: "/challenges", icon: Trophy, hoverColor: "hover:text-orange-600", hoverBg: "hover:bg-orange-50" },
   { label: "Notes", href: "/notes", icon: StickyNote, hoverColor: "hover:text-orange-600", hoverBg: "hover:bg-orange-50" },
 ];
