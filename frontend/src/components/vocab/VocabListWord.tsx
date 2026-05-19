@@ -1,17 +1,18 @@
 "use client";
 import React from "react";
 import CardWord from "./CardWord";
-import { WordPreview } from "./VocabDeckGrid";
+import { WordPreview } from "@/app/vocab/data";
 import { Button } from "@/components/ui/button";
 import { BookOpen, HelpCircle, Plus } from "lucide-react";
+import Link from "next/link";
+import { toggleStarAction } from "@/app/vocab/actions";
 
 interface VocabListWordProps {
   words: WordPreview[];
   viewMode: "grid" | "list";
   searchQuery: string;
   onClearSearch: () => void;
-  onAddWordClick: () => void;
-  onToggleStar: (wordName: string) => void;
+  folderId: string;
 }
 
 export default function VocabListWord({
@@ -19,8 +20,7 @@ export default function VocabListWord({
   viewMode,
   searchQuery,
   onClearSearch,
-  onAddWordClick,
-  onToggleStar,
+  folderId,
 }: VocabListWordProps) {
   
   if (words.length > 0) {
@@ -41,7 +41,7 @@ export default function VocabListWord({
             usage={card.usage}
             imageUrl={card.imageUrl}
             isStarred={card.isStarred}
-            onToggleStar={() => onToggleStar(card.word)}
+            onToggleStar={() => toggleStarAction(card.word, folderId)}
             viewMode={viewMode}
           />
         ))}
@@ -75,11 +75,13 @@ export default function VocabListWord({
             <p className="text-xs text-slate-500 mt-1">Bắt đầu quá trình học bằng cách thêm thẻ từ vựng đầu tiên của bạn!</p>
           </div>
           <Button 
-            onClick={onAddWordClick}
+            asChild
             className="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs mt-2 px-4 py-2 rounded-xl shadow-md shadow-sky-600/10 cursor-pointer flex items-center gap-1.5"
           >
-            <Plus className="w-3.5 h-3.5" />
-            Thêm thẻ từ ngay
+            <Link href="?addWord=true" scroll={false}>
+              <Plus className="w-3.5 h-3.5" />
+              Thêm thẻ từ ngay
+            </Link>
           </Button>
         </>
       )}

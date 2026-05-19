@@ -1,13 +1,12 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { WordPreview } from "./VocabDeckGrid";
+import { WordPreview } from "@/app/vocab/data";
 import SearchWords from "./SearchWords";
 import VocabListWord from "./VocabListWord";
 
 interface VocabWordSectionProps {
   words: WordPreview[];
-  onToggleStar: (wordName: string) => void;
-  onAddWordClick: () => void;
+  folderId: string;
 }
 
 /**
@@ -17,8 +16,7 @@ interface VocabWordSectionProps {
  */
 export default function VocabWordSection({
   words,
-  onToggleStar,
-  onAddWordClick,
+  folderId,
 }: VocabWordSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -51,8 +49,7 @@ export default function VocabWordSection({
         viewMode={viewMode}
         searchQuery={searchQuery}
         onClearSearch={handleClearSearch}
-        onAddWordClick={onAddWordClick}
-        onToggleStar={onToggleStar}
+        folderId={folderId}
       />
     </>
   );
