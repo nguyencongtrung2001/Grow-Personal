@@ -16,6 +16,11 @@ interface PageProps {
   searchParams: Promise<{ game?: string; addWord?: string }>;
 }
 
+// Metadata chuẩn SEO render trực tiếp tại Server
+export const metadata = {
+  title: "Luyện tập từ vựng | Grow Personal",
+};
+
 export default async function VocabDeckDetailPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
@@ -24,6 +29,7 @@ export default async function VocabDeckDetailPage({ params, searchParams }: Page
   const gameMode = resolvedSearchParams.game;
   const isAddWordOpen = resolvedSearchParams.addWord === "true";
 
+  // Lấy dữ liệu ngay tại Server Component
   const decks = await getDecksAction();
   const deck = decks.find(d => d.id === slug);
 
@@ -34,9 +40,10 @@ export default async function VocabDeckDetailPage({ params, searchParams }: Page
   const words = deck.words;
 
   return (
-    <main className="w-full max-w-7xl mx-auto p-4 md:p-6 min-h-screen animate-in fade-in duration-300">
+    <main className="w-full max-w-7xl mx-auto p-4 md:p-6 min-h-screen relative animate-in fade-in duration-300">
       {gameMode ? (
         <Suspense fallback={<GameLoadingSkeleton />}>
+          {/* Nếu có ?game=..., kích hoạt công cụ chơi game, truyền dữ liệu Server xuống */}
           <VocabGameEngine 
             mode={gameMode} 
             words={words.map((w, index) => ({
@@ -44,7 +51,8 @@ export default async function VocabDeckDetailPage({ params, searchParams }: Page
               word: w.word,
               type: w.type,
               definition: w.definition,
-              example: w.usage || "Chưa có ví dụ minh họa."
+              example: w.usage || "Chưa có ví dụ minh họa.",
+              imageUrl: w.imageUrl
             }))} 
             slug={slug} 
           />
@@ -83,7 +91,7 @@ export default async function VocabDeckDetailPage({ params, searchParams }: Page
             </Button>
           </div>
 
-          {/* Mini game control panel */}
+          {/* Mini game control panel (VocabMini) */}
           <VocabControlPanel slug={slug} />
 
           {/* Word list section */}
@@ -103,13 +111,12 @@ export default async function VocabDeckDetailPage({ params, searchParams }: Page
 
 function GameLoadingSkeleton() {
   return (
-    <div className="w-full max-w-3xl mx-auto space-y-6 mt-12">
-      <Skeleton className="h-8 w-1/4 rounded-lg mx-auto" />
-      <Skeleton className="h-[450px] w-full rounded-2xl shadow-sm" />
-      <div className="flex justify-between max-w-xs mx-auto">
-        <Skeleton className="h-10 w-24 rounded-xl" />
-        <Skeleton className="h-10 w-24 rounded-xl" />
+    <div className="w-full max-w-4xl mx-auto space-y-6 mt-12">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-10 w-40 rounded-xl" />
+        <Skeleton className="h-9 w-28 rounded-lg" />
       </div>
+      <Skeleton className="h-[450px] w-full rounded-2xl shadow-sm" />
     </div>
   );
 }
