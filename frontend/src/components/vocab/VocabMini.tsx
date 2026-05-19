@@ -12,8 +12,8 @@ interface VocabControlPanelProps {
 const gameModes = [
   { title: "Lật Thẻ Trực Quan", desc: "Học thuộc từ mới nhanh", icon: Layers, color: "text-sky-600 bg-sky-100", mode: "flashcard" },
   { title: "Trắc Nghiệm Phản Xạ", desc: "Kiểm tra mức độ nhận diện", icon: HelpCircle, color: "text-blue-600 bg-blue-50", mode: "quiz" },
-  { title: "Ghép Thẻ Tốc Độ", desc: "Tăng tốc độ liên tưởng", icon: LayoutGrid, color: "text-cyan-600 bg-cyan-50", mode: null },
-  { title: "Chính Tả & Viết", desc: "Ghi nhớ chính xác ký tự", icon: Keyboard, color: "text-teal-600 bg-teal-50", mode: null },
+  { title: "Ghép Thẻ Tốc Độ", desc: "Tăng tốc độ liên tưởng", icon: LayoutGrid, color: "text-cyan-600 bg-cyan-50", mode: "match" },
+  { title: "Chính Tả & Viết", desc: "Ghi nhớ chính xác ký tự", icon: Keyboard, color: "text-teal-600 bg-teal-50", mode: "translate" },
 ];
 
 export default function VocabControlPanel({ slug }: VocabControlPanelProps) {

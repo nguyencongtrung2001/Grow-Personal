@@ -13,6 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { 
   LayoutDashboard, 
@@ -75,7 +76,10 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 mt-auto group-data-[collapsible=icon]:p-2">
+      <SidebarFooter className="p-4 mt-auto group-data-[collapsible=icon]:p-2 flex flex-col gap-2">
+        <div className="flex justify-start group-data-[collapsible=icon]:justify-center">
+          <SidebarTrigger className="text-slate-600 hover:bg-slate-100 p-2 rounded-xl transition-all" />
+        </div>
         <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex items-center gap-3 group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:justify-center">
           <Avatar className="w-8 h-8 shrink-0">
             <AvatarImage src="https://lh3.googleusercontent.com/...your-avatar-id" alt="Profile" />
