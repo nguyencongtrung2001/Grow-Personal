@@ -1,8 +1,8 @@
-"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Plus, FolderOpen } from "lucide-react";
+import Link from "next/link"; // Sử dụng Next Link cho cơ chế Prefetching mặc định
 
 interface FolderItem {
   id: string;
@@ -12,17 +12,14 @@ interface FolderItem {
   isActive?: boolean;
 }
 
-const foldersData: FolderItem[] = [
-  { id: "ideas", emoji: "💡", name: "Ý tưởng sáng tạo", count: 12 },
-  { id: "diary", emoji: "✍️", name: "Nhật ký hàng ngày", count: 4, isActive: true },
-  { id: "books", emoji: "📚", name: "Tóm tắt sách", count: 7 },
-  { id: "travel", emoji: "✈️", name: "Lịch trình du lịch", count: 2 },
-];
+interface NoteSidebarProps {
+  folders: FolderItem[];
+}
 
-export default function NoteSidebar() {
+export default function NoteSidebar({ folders }: NoteSidebarProps) {
   return (
     <aside className="w-64 shrink-0 hidden lg:flex flex-col gap-4">
-      {/* Nút hành động ưu tiên cao nhất */}
+      {/* Nút hành động mở form hoặc kích hoạt qua Server Action / URL state */}
       <Button 
         className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm h-12 rounded-xl shadow-md shadow-amber-500/20 active:scale-[0.98] transition-all gap-2"
       >
@@ -42,29 +39,32 @@ export default function NoteSidebar() {
           </Button>
         </div>
         
-        <ul className="space-y-1">
-          {foldersData.map((folder) => (
-            <li
-              key={folder.id}
-              className={`px-3 py-2.5 rounded-lg text-sm flex items-center justify-between cursor-pointer transition-colors ${
-                folder.isActive
-                  ? "bg-amber-50 text-amber-900 font-semibold border-l-4 border-amber-500"
-                  : "text-slate-500 hover:bg-amber-50/50 hover:text-amber-600"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <span>{folder.emoji}</span> {folder.name}
-              </span>
-              <Badge 
-                variant={folder.isActive ? "default" : "secondary"}
-                className={`text-xs font-mono px-1.5 py-0.5 rounded-md ${
-                  folder.isActive 
-                    ? "bg-amber-500/20 text-amber-900 hover:bg-amber-500/20" 
-                    : "bg-slate-100 text-slate-500"
+        <ul className="space-y-1" role="list">
+          {folders.map((folder) => (
+            <li key={folder.id}>
+              {/* Tối ưu điều hướng bằng thẻ <Link> giúp tự động prefetch nội dung thư mục khi lọt vào viewport */}
+              <Link
+                href={`/notes?folder=${folder.id}`}
+                className={`px-3 py-2.5 rounded-lg text-sm flex items-center justify-between cursor-pointer transition-colors ${
+                  folder.isActive
+                    ? "bg-amber-50 text-amber-900 font-semibold border-l-4 border-amber-500"
+                    : "text-slate-500 hover:bg-amber-50/50 hover:text-amber-600"
                 }`}
               >
-                {folder.count}
-              </Badge>
+                <span className="flex items-center gap-2">
+                  <span role="img" aria-label={folder.name}>{folder.emoji}</span> {folder.name}
+                </span>
+                <Badge 
+                  variant={folder.isActive ? "default" : "secondary"}
+                  className={`text-xs font-mono px-1.5 py-0.5 rounded-md ${
+                    folder.isActive 
+                      ? "bg-amber-500/20 text-amber-900 hover:bg-amber-500/20" 
+                      : "bg-slate-100 text-slate-500"
+                  }`}
+                >
+                  {folder.count}
+                </Badge>
+              </Link>
             </li>
           ))}
         </ul>
