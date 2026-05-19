@@ -7,7 +7,7 @@ const cspHeader = `
   script-src 'self' 'unsafe-eval' 'unsafe-inline';
   style-src 'self' 'unsafe-inline';
   font-src 'self' data:;
-  img-src 'self' blob: data: https://lh3.googleusercontent.com;
+  img-src 'self' blob: data: https://lh3.googleusercontent.com https://images.unsplash.com;
   connect-src 'self';
   frame-ancestors 'none';
 `;
@@ -61,6 +61,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
         port: "",
         pathname: "/**",
       },
