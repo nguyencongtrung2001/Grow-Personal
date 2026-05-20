@@ -1,9 +1,11 @@
+// src/components/vocab/game/MatchPairMode.tsx
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { RefreshCw, CheckCircle } from "lucide-react";
+import { Clock, Zap, Sparkles } from "lucide-react";
+import GameHeader from "./shared/GameHeader";
+import ConfettiEffect from "./shared/ConfettiEffect";
 
 interface Word {
   id: string;
@@ -21,9 +23,10 @@ interface MatchCard {
 
 interface MatchPairModeProps {
   words: Word[];
+  onFinish: (result: { timeElapsed: number; bestStreak: number; score: number }) => void;
+  slug: string;
 }
 
-// Hàm băm chuỗi để sinh hạt giống (seed) integer 32-bit từ string
 function createSeededRandom(seedString: string) {
   let h = 2166136261 >>> 0;
   for (let i = 0; i < seedString.length; i++) {
@@ -39,205 +42,292 @@ function createSeededRandom(seedString: string) {
   };
 }
 
-// Hàm khởi tạo bộ thẻ bài ghép cặp (Hoàn toàn thuần khiết và không dùng Math.random khi render)
-function getInitialCards(playWords: Word[]) {
-  if (!playWords || playWords.length === 0) return [];
+function getInitialSeparatedCards(playWords: Word[]) {
+  if (!playWords || playWords.length === 0) return { enCards: [], viCards: [] };
 
-  const newCards: MatchCard[] = [];
-  playWords.forEach((w) => {
-    newCards.push({
-      id: `${w.id}-en`,
-      wordId: w.id,
-      text: w.word,
-      type: "en",
-      isMatched: false,
-    });
-    newCards.push({
-      id: `${w.id}-vi`,
-      wordId: w.id,
-      text: w.definition,
-      type: "vi",
-      isMatched: false,
-    });
-  });
+  const enCards: MatchCard[] = playWords.map((w) => ({
+    id: `${w.id}-en`,
+    wordId: w.id,
+    text: w.word,
+    type: "en",
+    isMatched: false,
+  }));
 
-  // Sử dụng Seeded Random tạo từ ID các từ để xáo trộn thuần khiết (Pure Fisher-Yates)
-  const seedSeed = playWords.map((w) => w.id).join("-");
-  const rand = createSeededRandom(seedSeed);
+  const viCards: MatchCard[] = playWords.map((w) => ({
+    id: `${w.id}-vi`,
+    wordId: w.id,
+    text: w.definition,
+    type: "vi",
+    isMatched: false,
+  }));
 
-  for (let i = newCards.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    const temp = newCards[i];
-    newCards[i] = newCards[j];
-    newCards[j] = temp;
+  const seedBase = playWords.map((w) => w.id).join("-");
+  const randEn = createSeededRandom(seedBase + "-en");
+  const randVi = createSeededRandom(seedBase + "-vi");
+
+  for (let i = enCards.length - 1; i > 0; i--) {
+    const j = Math.floor(randEn() * (i + 1));
+    const temp = enCards[i];
+    enCards[i] = enCards[j];
+    enCards[j] = temp;
   }
 
-  return newCards;
+  for (let i = viCards.length - 1; i > 0; i--) {
+    const j = Math.floor(randVi() * (i + 1));
+    const temp = viCards[i];
+    viCards[i] = viCards[j];
+    viCards[j] = temp;
+  }
+
+  return { enCards, viCards };
 }
 
-export default function MatchPairMode({ words }: MatchPairModeProps) {
-  // 1. CẮT MẢNG LẤY TỐI ĐA 6 TỪ VỰNG ĐẦU TIÊN (Tối đa 12 thẻ để bảo vệ UI)
+export default function MatchPairMode({ words, onFinish, slug }: MatchPairModeProps) {
   const playWords = useMemo(() => {
     return words ? words.slice(0, 6) : [];
   }, [words]);
 
-  // 2. KHỞI TẠO STATE BAN ĐẦU SỬ DỤNG LAZY INITIALIZER (Tránh setState trong useEffect)
-  const [cards, setCards] = useState<MatchCard[]>(() => getInitialCards(playWords));
-  const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
-  const [matchesFound, setMatchesFound] = useState(0);
+  const [separatedCards, setSeparatedCards] = useState<{ enCards: MatchCard[]; viCards: MatchCard[] }>(() =>
+    getInitialSeparatedCards(playWords)
+  );
+
+  const [selectedEnIdx, setSelectedEnIdx] = useState<number | null>(null);
+  const [selectedViIdx, setSelectedViIdx] = useState<number | null>(null);
   
-  // Lưu trữ tham chiếu timeout để hủy kích hoạt khi unmount (Chống rò rỉ bộ nhớ)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [matchesFound, setMatchesFound] = useState(0);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  
+  const [combo, setCombo] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [showComboAnimation, setShowComboAnimation] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
-  // Khôi phục đồng bộ State khi props playWords thay đổi (Lập trình hướng React 19)
-  const [prevPlayWords, setPrevPlayWords] = useState(playWords);
-  if (playWords !== prevPlayWords) {
-    setPrevPlayWords(playWords);
-    setCards(getInitialCards(playWords));
-    setSelectedIndices([]);
-    setMatchesFound(0);
-  }
+  const stopwatchRef = useRef<NodeJS.Timeout | null>(null);
+  const lockRef = useRef(false);
 
-  // Dọn dẹp timeout cũ nếu có khi unmount
   useEffect(() => {
+    stopwatchRef.current = setInterval(() => {
+      setTimeElapsed((prev) => prev + 1);
+    }, 1000);
+
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (stopwatchRef.current) clearInterval(stopwatchRef.current);
     };
   }, []);
 
-  // 3. HÀM CHƠI VÁN MỚI (Được kích hoạt bởi sự kiện click chuột)
-  const handleRestart = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    
-    // Sử dụng Math.random() ngẫu nhiên hạt giống mới khi chơi lại (Hợp lệ vì nằm trong event handler)
-    const newCards = getInitialCards(playWords);
-    for (let i = newCards.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = newCards[i];
-      newCards[i] = newCards[j];
-      newCards[j] = temp;
-    }
+  const triggerFinish = useCallback((finalTime: number, finalStreak: number) => {
+    if (stopwatchRef.current) clearInterval(stopwatchRef.current);
+    setShowConfetti(true);
 
-    setCards(newCards);
-    setSelectedIndices([]);
-    setMatchesFound(0);
-  };
+    setTimeout(() => {
+      onFinish({
+        timeElapsed: finalTime,
+        bestStreak: finalStreak,
+        score: playWords.length * 15 + finalStreak * 5,
+      });
+    }, 1500);
+  }, [playWords.length, onFinish]);
 
-  // 4. LOGIC TƯƠNG TÁC THẺ & KIỂM TRA MATCH (Trực tiếp trong Event Handler để tối ưu hiệu năng)
-  const handleCardClick = (index: number) => {
-    // CHỐNG SPAM CLICK: Bỏ qua nếu thẻ đã matched, đang lật hoặc đang chờ xử lý so sánh
-    if (
-      cards[index].isMatched ||
-      selectedIndices.includes(index) ||
-      selectedIndices.length === 2
-    ) {
-      return;
-    }
+  const checkMatch = useCallback((enIdx: number, viIdx: number) => {
+    lockRef.current = true;
+    const enCard = separatedCards.enCards[enIdx];
+    const viCard = separatedCards.viCards[viIdx];
 
-    const nextIndices = [...selectedIndices, index];
-    setSelectedIndices(nextIndices);
+    if (enCard.wordId === viCard.wordId) {
+      const nextCombo = combo + 1;
+      setCombo(nextCombo);
+      if (nextCombo > bestStreak) setBestStreak(nextCombo);
+      
+      setShowComboAnimation(true);
+      setTimeout(() => setShowComboAnimation(false), 800);
 
-    // Khi đã lật đủ 2 thẻ, tiến hành kiểm tra trùng khớp
-    if (nextIndices.length === 2) {
-      const [firstIdx, secondIdx] = nextIndices;
-      const card1 = cards[firstIdx];
-      const card2 = cards[secondIdx];
-
-      if (card1.wordId === card2.wordId && card1.type !== card2.type) {
-        // ĐÚNG CẶP: Ghép thẻ thành công ngay lập tức
-        setCards((prev) => {
-          const updated = [...prev];
-          updated[firstIdx] = { ...updated[firstIdx], isMatched: true };
-          updated[secondIdx] = { ...updated[secondIdx], isMatched: true };
-          return updated;
+      setTimeout(() => {
+        setSeparatedCards((prev) => {
+          const updatedEn = [...prev.enCards];
+          const updatedVi = [...prev.viCards];
+          updatedEn[enIdx] = { ...updatedEn[enIdx], isMatched: true };
+          updatedVi[viIdx] = { ...updatedVi[viIdx], isMatched: true };
+          return { enCards: updatedEn, viCards: updatedVi };
         });
-        setMatchesFound((prev) => prev + 1);
-        setSelectedIndices([]);
+
+        const nextMatches = matchesFound + 1;
+        setMatchesFound(nextMatches);
+        setSelectedEnIdx(null);
+        setSelectedViIdx(null);
+        lockRef.current = false;
+
+        if (nextMatches === playWords.length) {
+          triggerFinish(timeElapsed, Math.max(nextCombo, bestStreak));
+        }
+      }, 200);
+    } else {
+      setCombo(0);
+      setTimeout(() => {
+        setSelectedEnIdx(null);
+        setSelectedViIdx(null);
+        lockRef.current = false;
+      }, 600);
+    }
+  }, [separatedCards, combo, bestStreak, matchesFound, playWords.length, timeElapsed, triggerFinish]);
+
+  const handleCardClick = (index: number, column: "en" | "vi") => {
+    if (lockRef.current) return;
+
+    if (column === "en") {
+      const card = separatedCards.enCards[index];
+      if (card.isMatched) return;
+      
+      if (selectedEnIdx === index) {
+        setSelectedEnIdx(null);
+        return;
+      }
+
+      if (selectedViIdx !== null) {
+        setSelectedEnIdx(index);
+        checkMatch(index, selectedViIdx);
       } else {
-        // SAI CẶP: Chờ 800ms để người học ghi nhớ thẻ, sau đó úp ngược lại
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-          setSelectedIndices([]);
-        }, 800);
+        setSelectedEnIdx(index);
+      }
+    } else {
+      const card = separatedCards.viCards[index];
+      if (card.isMatched) return;
+
+      if (selectedViIdx === index) {
+        setSelectedViIdx(null);
+        return;
+      }
+
+      if (selectedEnIdx !== null) {
+        setSelectedViIdx(index);
+        checkMatch(selectedEnIdx, index);
+      } else {
+        setSelectedViIdx(index);
       }
     }
   };
 
-  // 5. MÀN HÌNH HOÀN THÀNH (END SCREEN)
-  const isFinished = playWords.length > 0 && matchesFound === playWords.length;
+  const formatTime = (secs: number) => {
+    const mins = Math.floor(secs / 60);
+    const remainingSecs = secs % 60;
+    return `${mins.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}`;
+  };
 
-  if (isFinished) {
-    return (
-      <div className="text-center mt-16 max-w-md mx-auto py-12 px-6 bg-white rounded-3xl border border-slate-200 shadow-md animate-in zoom-in duration-300">
-        <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-100 shadow-inner">
-          <CheckCircle className="w-12 h-12 text-emerald-500 animate-bounce" />
-        </div>
-        <h2 className="text-3xl font-black text-emerald-600 mb-3 tracking-tight">Tuyệt vời!</h2>
-        <p className="text-slate-500 font-medium mb-8 leading-relaxed">
-          Bạn đã tìm được toàn bộ <strong className="text-slate-800 text-lg">{playWords.length}</strong> cặp thẻ từ vựng.
-        </p>
-        <Button
-          onClick={handleRestart}
-          className="w-full h-14 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg cursor-pointer transition-all active:scale-95 shadow-md flex items-center justify-center gap-2"
-        >
-          <RefreshCw className="w-5 h-5 animate-spin-slow" /> Chơi ván mới
-        </Button>
-      </div>
-    );
-  }
+  const timerElement = (
+    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl shadow-inner text-amber-400 font-bold font-mono text-sm shadow-indigo-500/5">
+      <Clock className="w-4 h-4 text-amber-400 animate-pulse" />
+      <span>{formatTime(timeElapsed)}</span>
+    </div>
+  );
 
-  // 6. GIAO DIỆN GAME CHÍNH (PLAYING SCREEN)
   return (
-    <div className="max-w-4xl mx-auto mt-6 px-4 animate-in fade-in duration-300">
-      {/* Thông tin tiến độ */}
-      <div className="flex justify-between items-center mb-6 bg-slate-50 border border-slate-100 py-3 px-5 rounded-2xl shadow-inner">
-        <span className="text-sm font-semibold text-slate-500">
-          Tiến trình ghép cặp:
-        </span>
-        <span className="text-sm font-mono font-bold text-amber-700 bg-amber-50 border border-amber-200/50 px-3.5 py-1 rounded-lg">
-          {matchesFound} / {playWords.length} Cặp thẻ
-        </span>
+    <div className="w-full min-h-[750px] bg-slate-950 text-white rounded-3xl border border-slate-900 shadow-2xl relative overflow-hidden flex flex-col justify-between p-6">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/8 rounded-full blur-3xl pointer-events-none" />
+
+      {showConfetti && <ConfettiEffect />}
+
+      <div className="z-10">
+        <GameHeader
+          title="Ghép cặp từ - nghĩa"
+          currentIndex={matchesFound}
+          totalQuestions={playWords.length}
+          score={matchesFound * 15 + combo * 5}
+          slug={slug}
+          timerElement={timerElement}
+        />
       </div>
 
-      {/* Lưới Thẻ Bài Responsive */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 perspective-distant">
-        {cards.map((card, idx) => {
-          const isSelected = selectedIndices.includes(idx);
-          const isMatched = card.isMatched;
+      <div className="max-w-4xl mx-auto w-full px-4 grow flex flex-col justify-center gap-6 z-10 py-6">
+        {/* Khối hiển thị nhân hệ số Combo tích lũy */}
+        <div className="h-12 flex items-center justify-center relative">
+          {combo > 1 && (
+            <div className={`flex items-center gap-1 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono font-black text-sm tracking-wide shadow-md shadow-amber-500/5 animate-pulse ${
+              showComboAnimation ? "scale-110 duration-200" : "transition-transform"
+            }`}>
+              <Zap className="w-4 h-4 text-amber-400 fill-amber-400 animate-bounce" />
+              <span>STREAK: {combo}x</span>
+            </div>
+          )}
+        </div>
 
-          let cardStyle =
-            "bg-white border-slate-200 text-slate-800 shadow-sm hover:border-amber-400 hover:shadow-md hover:scale-[1.02]";
+        {/* Lưới ghép thẻ phân chia 2 cột rõ rệt */}
+        <div className="grid grid-cols-2 gap-6 md:gap-8 items-stretch">
+          {/* CỘT EN: Cột Tiếng Anh */}
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-slate-400 bg-slate-900 border border-slate-850 px-3 py-1.5 rounded-xl w-fit">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <span>TIẾNG ANH</span>
+            </div>
 
-          if (isSelected) {
-            cardStyle =
-              "bg-amber-50/80 border-amber-400 text-amber-900 ring-2 ring-amber-500/20 scale-[1.02]";
-          }
+            {separatedCards.enCards.map((card, idx) => {
+              const isSelected = selectedEnIdx === idx;
+              const isMatched = card.isMatched;
 
-          if (isMatched) {
-            cardStyle =
-              "bg-emerald-50/50 border-emerald-200 text-emerald-400 opacity-40 scale-95 pointer-events-none";
-          }
+              let cardStyles = "border-slate-850 bg-slate-900/40 text-slate-350 hover:bg-slate-900/80 hover:border-slate-700/80 active:scale-[0.98]";
+              if (isSelected) {
+                cardStyles = "border-amber-400 bg-amber-950/20 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.15)]";
+              }
 
-          return (
-            <Card
-              key={card.id}
-              onClick={() => handleCardClick(idx)}
-              className={`flex items-center justify-center p-5 h-36 rounded-2xl border-2 transition-all duration-300 transform-gpu cursor-pointer select-none ${cardStyle}`}
-            >
-              <span
-                className={`text-center font-bold leading-snug ${
-                  card.type === "en"
-                    ? "text-xl md:text-2xl text-slate-900"
-                    : "text-base md:text-lg text-slate-700"
-                } ${isMatched ? "text-emerald-500" : ""}`}
-              >
-                {card.text}
-              </span>
-            </Card>
-          );
-        })}
+              return (
+                <div key={card.id} className="h-20 relative">
+                  <Card
+                    onClick={() => handleCardClick(idx, "en")}
+                    className={`absolute inset-0 p-4 rounded-2xl flex items-center justify-center font-black text-base md:text-lg border cursor-pointer select-none transition-all duration-300 ${cardStyles} ${
+                      isMatched ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"
+                    }`}
+                  >
+                    <span className="truncate select-text">{card.text}</span>
+                  </Card>
+
+                  {/* Ô trống placeholder tinh tế để giữ layout khi thẻ biến mất */}
+                  {isMatched && (
+                    <div className="absolute inset-0 rounded-2xl border-2 border-dashed border-slate-900/30 flex items-center justify-center text-slate-700 pointer-events-none animate-in fade-in duration-300">
+                      <div className="w-2.5 h-2.5 bg-slate-900/20 rounded-full" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* CỘT VI: Cột Tiếng Việt */}
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-slate-400 bg-slate-900 border border-slate-850 px-3 py-1.5 rounded-xl w-fit">
+              <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+              <span>ĐỊNH NGHĨA</span>
+            </div>
+
+            {separatedCards.viCards.map((card, idx) => {
+              const isSelected = selectedViIdx === idx;
+              const isMatched = card.isMatched;
+
+              let cardStyles = "border-slate-850 bg-slate-900/40 text-slate-350 hover:bg-slate-900/80 hover:border-slate-700/80 active:scale-[0.98]";
+              if (isSelected) {
+                cardStyles = "border-amber-400 bg-amber-950/20 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.15)]";
+              }
+
+              return (
+                <div key={card.id} className="h-20 relative">
+                  <Card
+                    onClick={() => handleCardClick(idx, "vi")}
+                    className={`absolute inset-0 p-4 rounded-2xl flex items-center justify-center font-bold text-xs md:text-sm border cursor-pointer select-none text-center transition-all duration-300 leading-snug ${cardStyles} ${
+                      isMatched ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"
+                    }`}
+                  >
+                    <span className="line-clamp-2 select-text">{card.text}</span>
+                  </Card>
+
+                  {/* Ô trống placeholder tinh tế để giữ layout khi thẻ biến mất */}
+                  {isMatched && (
+                    <div className="absolute inset-0 rounded-2xl border-2 border-dashed border-slate-900/30 flex items-center justify-center text-slate-700 pointer-events-none animate-in fade-in duration-300">
+                      <div className="w-2.5 h-2.5 bg-slate-900/20 rounded-full" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

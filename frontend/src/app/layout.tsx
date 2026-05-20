@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AppSidebar from "@/components/layouts/Sidebars";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Load Google Fonts locally via next/font to eliminate external CDN network requests and Layout Shift (CLS)
@@ -61,8 +61,13 @@ export default function RootLayout({
               
               {/* Khối content chính */}
               <main className="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
+                {/* Header thanh công cụ nhỏ chứa Trigger */}
+                <header className="flex h-12 shrink-0 items-center gap-2 border-b border-slate-100 bg-white px-4 md:px-6">
+                  <SidebarTrigger className="text-slate-600 hover:bg-slate-100 p-2 rounded-xl transition-all" />
+                </header>
+
                 {/* Viewport chính của Page */}
-                <div className="flex-1 p-4 md:p-8 overflow-y-auto">
+                <div className="flex-1 p-4 md:pt-4 md:pb-8 md:px-8 overflow-y-auto">
                   <div className="w-full flex flex-col gap-6">
                     {children}
                   </div>
