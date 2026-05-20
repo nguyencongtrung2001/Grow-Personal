@@ -1,4 +1,6 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+// Thêm chữ "type" vào các interface của Express
+import express from 'express';
+import type { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -6,21 +8,18 @@ import morgan from 'morgan';
 const app: Express = express();
 
 // 1. Security & Utility Middlewares
-app.use(helmet()); // Bảo mật HTTP headers
-app.use(cors()); // Cấu hình Cross-Origin
-app.use(express.json()); // Parse JSON body
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev')); // Log request
+app.use(morgan('dev'));
 
 // 2. Định tuyến (Routes)
 app.get('/health', (req: Request, res: Response) => {
     res.status(200).json({ status: 'success', message: 'Hệ thống hoạt động tốt.' });
 });
 
-// Chỗ này sau này sẽ import các route chính
-// app.use('/api/v1/challenges', challengeRoutes);
-
-// 3. Global Error Handler (Bắt buộc phải có ở cuối cùng)
+// 3. Global Error Handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     console.error('🔥 Error:', err);
 

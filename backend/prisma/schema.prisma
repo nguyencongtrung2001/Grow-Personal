@@ -1,6 +1,5 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -53,7 +52,10 @@ enum WordType {
   PHRASE
   OTHER
 }
-
+enum UserRole {
+  USER
+  ADMIN
+}
 // ==========================================
 // 1. Model: User
 // ==========================================
@@ -63,6 +65,7 @@ model User {
   email      String       @unique
   name       String?
   avatarUrl  String?
+  role       UserRole     @default(USER) // Mặc định là USER
   provider   AuthProvider @default(GOOGLE)
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
