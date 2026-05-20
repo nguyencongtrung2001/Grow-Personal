@@ -6,7 +6,11 @@ const PORT = process.env.PORT || 8000;
 
 // Khởi tạo PrismaClient theo chuẩn Prisma 7
 export const prisma = new PrismaClient({
-    datasourceUrl: process.env.DATABASE_URL, // Truyền trực tiếp URL vào đây
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL,
+        },
+    },
 });
 
 const startServer = async () => {
