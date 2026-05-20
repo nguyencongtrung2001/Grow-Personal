@@ -2,26 +2,20 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import dynamic from "next/dynamic";
+
 import { Button } from "@/components/ui/button";
 import { BrainCircuit } from "lucide-react";
 import Link from "next/link";
 
-const Loading = () => (
-  <p className="text-center py-16 text-slate-400 font-medium animate-pulse">
-    Đang tải cấu hình thử thách...
-  </p>
-);
+import FlashcardMode from "./FlashcardMode";
+import QuizABCDMode from "./QuizABCDMode";
+import TranslateInputMode from "./TranslateInputMode";
+import MatchPairMode from "./MatchPairMode";
 
-const FlashcardMode = dynamic(() => import("./FlashcardMode"), { loading: Loading });
-const QuizABCDMode = dynamic(() => import("./QuizABCDMode"), { loading: Loading });
-const TranslateInputMode = dynamic(() => import("./TranslateInputMode"), { loading: Loading });
-const MatchPairMode = dynamic(() => import("./MatchPairMode"), { loading: Loading });
-
-const FlashcardResult = dynamic(() => import("./FlashcardResult"), { loading: Loading });
-const QuizResult = dynamic(() => import("./QuizResult"), { loading: Loading });
-const TranslateResult = dynamic(() => import("./TranslateResult"), { loading: Loading });
-const MatchResult = dynamic(() => import("./MatchResult"), { loading: Loading });
+import FlashcardResult from "./FlashcardResult";
+import QuizResult from "./QuizResult";
+import TranslateResult from "./TranslateResult";
+import MatchResult from "./MatchResult";
 
 interface Word {
   id: string;

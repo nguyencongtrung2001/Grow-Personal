@@ -107,7 +107,7 @@ export default function QuizABCDMode({ words, onFinish, slug }: QuizABCDModeProp
 
   const triggerFinish = useCallback((updatedHistory: QuestionResult[], finalScore: number) => {
     if (timerRef.current) clearInterval(timerRef.current);
-    
+
     const accuracy = (finalScore / words.length) * 100;
     if (accuracy >= 80) {
       setShowConfetti(true);
@@ -280,7 +280,7 @@ export default function QuizABCDMode({ words, onFinish, slug }: QuizABCDModeProp
         {/* Khối Câu Hỏi Panel (Dạng hologram neon cực ngầu) */}
         <Card className="p-8 text-center bg-slate-900/60 border border-slate-850 text-white rounded-3xl shadow-xl relative overflow-hidden transition-all hover:border-slate-800">
           <div className="absolute top-0 right-0 w-24 h-24 bg-white/2 rounded-full blur-2xl pointer-events-none" />
-          
+
           <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-slate-400 bg-slate-950/80 px-3 py-1 rounded-full border border-slate-850 w-fit mx-auto">
             <Sparkles className="w-3 h-3 text-amber-400" />
             <span>Chọn định nghĩa đúng</span>
@@ -319,9 +319,8 @@ export default function QuizABCDMode({ words, onFinish, slug }: QuizABCDModeProp
               <Card
                 key={idx}
                 onClick={() => !isAnswered && handleSelectOption(option)}
-                className={`p-4 rounded-2xl flex items-center gap-4 cursor-pointer border font-bold text-sm tracking-tight transition-all duration-200 select-none group relative overflow-hidden ${cardStyles} ${
-                  isShake ? "animate-shake" : ""
-                }`}
+                className={`p-4 rounded-2xl flex items-center gap-4 cursor-pointer border font-bold text-sm tracking-tight transition-all duration-200 select-none group relative overflow-hidden ${cardStyles} ${isShake ? "animate-shake" : ""
+                  }`}
               >
                 {/* Visual tactile mechanical-keycap style badge */}
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs border shrink-0 transition-all font-mono shadow-inner ${keyStyle}`}>

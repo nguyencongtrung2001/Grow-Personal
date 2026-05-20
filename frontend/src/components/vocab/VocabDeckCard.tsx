@@ -5,7 +5,7 @@ import { Card, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Folder, MoreVertical, ChevronRight } from "lucide-react";
-import { DeckItem } from "./VocabDeckGrid";
+import { DeckItem } from "@/app/vocab/data";
 
 interface VocabDeckCardProps {
   deck: DeckItem;
